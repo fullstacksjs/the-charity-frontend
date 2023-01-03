@@ -2530,6 +2530,14 @@ export type FamilyQueryVariables = Exact<{
 
 export type FamilyQuery = { __typename?: 'query_root', family_by_pk?: { __typename?: 'family', id: any, name: string, status: FamilyStatusEnum, severity: FamilySeverityEnum, code?: string | null } | null };
 
+export type ProjectListQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type ProjectListQuery = { __typename?: 'query_root', project_aggregate: { __typename?: 'project_aggregate', nodes: Array<{ __typename?: 'project', name: string, id: any }> } };
+
 
 export const CreateFamilyDocument = gql`
     mutation CreateFamily($name: String!) {
@@ -2641,3 +2649,42 @@ export function useFamilyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Fam
 export type FamilyQueryHookResult = ReturnType<typeof useFamilyQuery>;
 export type FamilyLazyQueryHookResult = ReturnType<typeof useFamilyLazyQuery>;
 export type FamilyQueryResult = Apollo.QueryResult<FamilyQuery, FamilyQueryVariables>;
+export const ProjectListDocument = gql`
+    query ProjectList($offset: Int, $limit: Int) {
+  project_aggregate(offset: $offset, limit: $limit) {
+    nodes {
+      name
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useProjectListQuery__
+ *
+ * To run a query within a React component, call `useProjectListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectListQuery({
+ *   variables: {
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useProjectListQuery(baseOptions?: Apollo.QueryHookOptions<ProjectListQuery, ProjectListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProjectListQuery, ProjectListQueryVariables>(ProjectListDocument, options);
+      }
+export function useProjectListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProjectListQuery, ProjectListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProjectListQuery, ProjectListQueryVariables>(ProjectListDocument, options);
+        }
+export type ProjectListQueryHookResult = ReturnType<typeof useProjectListQuery>;
+export type ProjectListLazyQueryHookResult = ReturnType<typeof useProjectListLazyQuery>;
+export type ProjectListQueryResult = Apollo.QueryResult<ProjectListQuery, ProjectListQueryVariables>;

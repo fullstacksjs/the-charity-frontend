@@ -15,3 +15,5 @@ export {
   useFamilyQuery,
 } from './operations/__generated__/typesAndHooks';
 export { useLoginMutation } from './operations/mutations/useLoginMutation';
+export type { ProjectListQuery, Project } from './operations/__generated__/typesAndHooks';
+export { ProjectListDocument } from './operations/__generated__/typesAndHooks';
