@@ -1,3 +1,5 @@
+import { useProjectListQuery } from '@camp/data-layer';
+import { FullPageLoader } from '@camp/design';
 import { messages } from '@camp/messages';
 import { createTestAttr } from '@camp/test';
 import { Table, useMantineTheme } from '@mantine/core';
@@ -6,32 +8,18 @@ import { ProjectTableRow } from './ProjectTableRow';
 
 export const projectTableId = 'project-list-table';
 
-export const ProjectInfo = [
-  {
-    id: '1',
-    name: 'خرید مدرسه',
-  },
-  {
-    id: '2',
-    name: 'خرید جهیزیه عروس',
-  },
-  {
-    id: '3',
-    name: 'خرید مک بوک برای تیم فول استکس',
-  },
-];
-
 export const ProjectTable = () => {
   const { colors } = useMantineTheme();
   const t = messages.projects.list.table.columns;
   const columns = t.map(column => <th key={column}>{column}</th>);
+  const { data, loading, error } = useProjectListQuery();
 
-  const rows = ProjectInfo.map((info, index) => (
-    <ProjectTableRow
-      key={Object.values(info).join('-')}
-      name={info.name}
-      order={index + 1}
-    />
+  if (error) return <h1>{error.message}</h1>;
+
+  if (loading) return <FullPageLoader />;
+
+  const rows = data?.project_aggregate.nodes.map(({ id, name }, index) => (
+    <ProjectTableRow key={id} name={name} order={index + 1} />
   ));
 
   return (
